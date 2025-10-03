@@ -17,7 +17,7 @@ const SkillBar = ({ skill, index }: { skill: any; index: number }) => {
     >
       <div className="flex justify-between items-center mb-2">
         <span className="text-gray-700 dark:text-gray-300 font-medium flex items-center gap-2">
-          <span className="text-xl">{skill.icon}</span>
+          <img src={skill.icon} alt={skill.name} className="w-5 h-5" />
           {skill.name}
         </span>
         <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
@@ -34,11 +34,11 @@ const SkillBar = ({ skill, index }: { skill: any; index: number }) => {
   );
 };
 
-const SkillCategory = ({ title, skillList, icon }: { title: string; skillList: any[]; icon: string }) => {
+const SkillCategory = ({ title, skillList, categoryIcon }: { title: string; skillList: any[]; categoryIcon: string }) => {
   return (
     <div className="mb-8">
       <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-        <span className="text-2xl">{icon}</span>
+        <img src={categoryIcon} alt={title} className="w-6 h-6" />
         {title}
       </h4>
       <div className="space-y-3">
@@ -55,10 +55,10 @@ const About = () => {
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   const skillCategories = [
-    { title: 'Frontend', skills: skills.filter(s => s.category === 'frontend'), icon: '🎨' },
-    { title: 'Backend', skills: skills.filter(s => s.category === 'backend'), icon: '⚙️' },
-    { title: 'Languages', skills: skills.filter(s => s.category === 'languages'), icon: '💻' },
-    { title: 'Tools', skills: skills.filter(s => s.category === 'tools'), icon: '🛠️' },
+    { title: 'Frontend', skills: skills.filter(s => s.category === 'frontend'), categoryIcon: 'https://cdn.simpleicons.org/react/61DAFB' },
+    { title: 'Backend', skills: skills.filter(s => s.category === 'backend'), categoryIcon: 'https://cdn.simpleicons.org/nodedotjs/339933' },
+    { title: 'Languages', skills: skills.filter(s => s.category === 'languages'), categoryIcon: 'https://cdn.simpleicons.org/javascript/F7DF1E' },
+    { title: 'Tools', skills: skills.filter(s => s.category === 'tools'), categoryIcon: 'https://cdn.simpleicons.org/git/F05032' },
   ];
 
   return (
@@ -142,7 +142,7 @@ const About = () => {
                     <SkillCategory
                       title={category.title}
                       skillList={category.skills}
-                      icon={category.icon}
+                      categoryIcon={category.categoryIcon}
                     />
                   </motion.div>
                 ))}

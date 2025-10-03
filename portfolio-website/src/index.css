@@ -22,6 +22,22 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+/* Smooth scrolling with momentum */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body.scrolling {
+    transition: transform 0.1s ease-out;
+  }
 }
 
 /* Custom scrollbar */

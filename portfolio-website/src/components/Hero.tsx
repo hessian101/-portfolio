@@ -1,154 +1,199 @@
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 import { personalInfo } from '../data/portfolio-data';
-import { useEffect, useState } from 'react';
+import { useMousePosition } from '../hooks/useMousePosition';
+import OptimizedThreeJSHero from './OptimizedThreeJS';
+import { useDeviceCapabilities } from '../hooks/useDeviceCapabilities';
 
-const Particle = ({ delay }: { delay: number }) => (
-  <motion.div
-    className="absolute w-2 h-2 bg-white/30 rounded-full"
-    initial={{ 
-      x: Math.random() * window.innerWidth,
-      y: window.innerHeight + 10,
-      opacity: 0
-    }}
-    animate={{
-      y: -10,
-      opacity: [0, 1, 0],
-      x: Math.random() * window.innerWidth
-    }}
-    transition={{
-      duration: Math.random() * 3 + 2,
-      delay: delay,
-      repeat: Infinity,
-      ease: "linear"
-    }}
-  />
-);
-
-const ParticleBackground = () => {
-  const [particles, setParticles] = useState<number[]>([]);
-
-  useEffect(() => {
-    setParticles(Array.from({ length: 50 }, (_, i) => i));
-  }, []);
+const InteractiveButton = ({ 
+  children, 
+  onClick, 
+  variant = 'primary' 
+}: { 
+  children: React.ReactNode; 
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+}) => {
+  const mousePosition = useMousePosition();
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((_, index) => (
-        <Particle key={index} delay={index * 0.1} />
-      ))}
-    </div>
+    <motion.button
+      whileHover={{ scale: 1.05, y: -5 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+      className={`relative overflow-hidden px-8 py-4 rounded-full font-semibold transition-all duration-300 group ${
+        variant === 'primary'
+          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-2xl'
+          : 'border-2 border-white text-white hover:bg-white hover:text-purple-600'
+      }`}
+      style={{
+        transform: `perspective(1000px) rotateX(${mousePosition.normalizedY * 5}deg) rotateY(${mousePosition.normalizedX * 5}deg)`,
+      }}
+    >
+      {/* Dynamic gradient background */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at ${((mousePosition.normalizedX + 1) * 50)}% ${((mousePosition.normalizedY + 1) * 50)}%, rgba(255,255,255,0.2) 0%, transparent 70%)`,
+        }}
+      />
+      <span className="relative z-10 flex items-center gap-2">
+        {children}
+        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+      </span>
+    </motion.button>
   );
 };
 
 const Hero = () => {
+  const mousePosition = useMousePosition();
+  const deviceCapabilities = useDeviceCapabilities();
+
   return (
-    <section className="min-h-screen relative flex items-center justify-center overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 animated-gradient opacity-90" />
+    <section className="min-h-screen relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Three.js Background - Only on devices with WebGL support */}
+      {deviceCapabilities.hasWebGL && !deviceCapabilities.reducedMotion && (
+        <OptimizedThreeJSHero />
+      )}
       
-      {/* Particle background */}
-      <ParticleBackground />
+      {/* Fallback gradient background for low-end devices */}
+      {(!deviceCapabilities.hasWebGL || deviceCapabilities.reducedMotion) && (
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-600/20 to-blue-600/20" />
+      )}
       
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/* Dynamic overlay that responds to mouse */}
+      <div 
+        className="absolute inset-0 transition-all duration-300"
+        style={{
+          background: `radial-gradient(circle 600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(139, 92, 246, 0.2) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%)`,
+        }}
+      />
       
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-4">
+      <div className="relative z-10 text-center text-white px-4 max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-6"
+          transition={{ duration: 1, delay: 0.5 }}
+          className="space-y-8"
         >
-          {/* Avatar */}
+          {/* Avatar with 3D effect */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8"
+            initial={{ opacity: 0, scale: 0.5, rotateY: 90 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="mb-12"
+            style={{
+              transform: `perspective(1000px) rotateX(${mousePosition.normalizedY * 10}deg) rotateY(${mousePosition.normalizedX * 10}deg)`,
+            }}
           >
-            <img
-              src={personalInfo.avatar}
-              alt={personalInfo.name}
-              className="w-32 h-32 mx-auto rounded-full border-4 border-white/30 shadow-xl"
-            />
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-lg opacity-50 animate-pulse" />
+              <img
+                src={personalInfo.avatar}
+                alt={personalInfo.name}
+                className="relative w-40 h-40 mx-auto rounded-full border-4 border-white/20 shadow-2xl backdrop-blur-sm"
+              />
+            </div>
           </motion.div>
 
-          {/* Name */}
+          {/* Name with dynamic glow */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-5xl md:text-7xl font-bold mb-4"
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="text-6xl md:text-8xl font-bold mb-6 leading-tight"
+            style={{
+              transform: `perspective(1000px) rotateX(${mousePosition.normalizedY * 2}deg)`,
+              textShadow: `0 0 50px rgba(139, 92, 246, ${0.5 + mousePosition.normalizedX * 0.3})`,
+            }}
           >
-            <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
               {personalInfo.name}
             </span>
           </motion.h1>
 
-          {/* Title */}
-          <motion.p
+          {/* Title with typing effect */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-xl md:text-2xl text-blue-100 font-light max-w-2xl mx-auto"
+            transition={{ duration: 0.8, delay: 1.1 }}
+            className="text-2xl md:text-3xl text-purple-200 font-light max-w-4xl mx-auto mb-8"
           >
-            {personalInfo.title}
-          </motion.p>
+            <span className="relative">
+              {personalInfo.title}
+              <motion.span
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+                className="ml-1 text-pink-400"
+              >
+                |
+              </motion.span>
+            </span>
+          </motion.div>
 
           {/* Bio */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-            className="text-lg text-white/80 max-w-3xl mx-auto leading-relaxed"
+            transition={{ duration: 0.8, delay: 1.3 }}
+            className="text-lg text-white/90 max-w-4xl mx-auto leading-relaxed mb-12"
           >
             {personalInfo.bio}
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* Interactive CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mt-8"
+            transition={{ duration: 0.8, delay: 1.5 }}
+            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-white text-purple-600 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            <InteractiveButton
               onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              View My Work
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all duration-300"
+              Explore My Work
+            </InteractiveButton>
+            <InteractiveButton
+              variant="secondary"
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Get In Touch
-            </motion.button>
+              Let's Connect
+            </InteractiveButton>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Creative scroll indicator */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, delay: 2 }}
+        className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
       >
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center text-white/70 cursor-pointer"
+          animate={{ 
+            y: [0, 15, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            duration: 2, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+          className="flex flex-col items-center text-white/60 cursor-pointer group"
           onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+          style={{
+            transform: `perspective(1000px) rotateX(${mousePosition.normalizedY * 5}deg)`,
+          }}
         >
-          <span className="text-sm mb-2 font-light">Scroll Down</span>
-          <ChevronDown className="w-6 h-6" />
+          <span className="text-sm mb-3 font-light group-hover:text-white/80 transition-colors">
+            Discover More
+          </span>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-400 to-pink-400 rounded-full blur-md opacity-50" />
+            <ChevronDown className="relative w-8 h-8 group-hover:scale-110 transition-transform" />
+          </div>
         </motion.div>
       </motion.div>
     </section>

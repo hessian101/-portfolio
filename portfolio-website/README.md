@@ -1,43 +1,85 @@
-# 🚀 Modern Portfolio Website
+# 🚀 Next-Generation Portfolio Website
 
-A stunning, responsive portfolio website built with React, TypeScript, Tailwind CSS, and Framer Motion. Features smooth animations, dark mode, and a modern design that showcases your work beautifully.
+A cutting-edge, interactive portfolio website built with React, TypeScript, Three.js, and advanced animation libraries. Features immersive 3D graphics, mouse-tracking interactions, and creative navigation patterns that push the boundaries of modern web design.
 
-## ✨ Features
+## ✨ Revolutionary Features
 
-- **🎨 Modern Design**: Clean, professional layout with glassmorphism effects
-- **🌙 Dark Mode**: Smooth theme switching with system preference detection
-- **📱 Fully Responsive**: Optimized for desktop, tablet, and mobile devices
-- **🎭 Smooth Animations**: Framer Motion powered animations and micro-interactions
-- **🎯 Interactive Elements**: Hover effects, particle background, and dynamic content
-- **📊 Skills Visualization**: Animated progress bars and skill categories
-- **🔍 Project Filtering**: Filter projects by category with smooth transitions
-- **📧 Contact Form**: Functional contact form with validation
-- **🐳 Docker Ready**: Containerized for easy deployment
-- **⚡ Performance Optimized**: Fast loading with Vite and optimized assets
+### 🌟 **3D Interactive Experience**
+- **Three.js Integration**: Fully interactive 3D hero section with particle systems
+- **Mouse-Reactive Elements**: Components that respond to cursor movement with 3D tilt effects
+- **WebGL Shaders**: Dynamic lighting and gradient effects that follow the mouse
+- **Floating Geometry**: Animated 3D shapes and interactive backgrounds
 
-## 🛠️ Tech Stack
+### 🎯 **Advanced Interactions**
+- **Mouse Tracking**: Global cursor-following effects throughout the site
+- **3D Tilt Cards**: Every interactive element features realistic 3D perspective
+- **Dynamic Spotlights**: Mouse-following gradient overlays and light effects
+- **Parallax Depth**: Multi-layer depth effects based on mouse position
 
-- **Frontend**: React 18, TypeScript, Vite
-- **Styling**: Tailwind CSS, Custom CSS animations
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Deployment**: Docker, Nginx
-- **Development**: ESLint, Hot Module Replacement
+### 🎭 **Creative Navigation**
+- **Horizontal Scrolling**: Smooth horizontal project showcase sections
+- **Split-Screen Layouts**: Multi-directional content presentation
+- **Creative Transitions**: Beyond simple vertical scrolling
+- **Interactive Indicators**: Dynamic progress bars and scroll animations
 
-## 🚀 Quick Start
+### 🎨 **Visual Excellence**
+- **Real Technology Icons**: No emojis - actual SVG logos from Simple Icons CDN
+- **Glassmorphism Effects**: Modern frosted glass aesthetics
+- **Gradient Animations**: Dynamic color transitions and flowing backgrounds
+- **Smooth Micro-interactions**: Every element responds with fluid animations
+
+### 📱 **Technical Excellence**
+- **Performance Optimized**: Smooth 60fps animations even with complex 3D scenes
+- **Docker Containerized**: Complete development and production environments
+- **TypeScript Safety**: Fully typed for maintainability and reliability
+- **Responsive Design**: Flawless experience across all device sizes
+
+## 🛠️ Advanced Tech Stack
+
+### **Core Technologies**
+- **React 18**: Latest React with Concurrent Features
+- **TypeScript**: Complete type safety and developer experience
+- **Vite**: Lightning-fast development and optimized builds
+- **Three.js**: 3D graphics and WebGL rendering
+
+### **Animation & Interaction**
+- **Framer Motion**: Advanced React animations and gestures
+- **React Three Fiber**: React renderer for Three.js
+- **React Spring**: Physics-based animations
+- **GSAP**: Professional-grade animation timeline
+
+### **Styling & Design**
+- **Tailwind CSS**: Utility-first styling framework
+- **Custom CSS Animations**: Handcrafted keyframe animations
+- **Responsive Design**: Mobile-first approach with perfect scaling
+
+### **3D Graphics & Effects**
+- **@react-three/drei**: Essential Three.js helpers and abstractions
+- **@react-three/fiber**: React renderer for Three.js scenes
+- **WebGL Shaders**: Custom fragment and vertex shaders
+- **Particle Systems**: Dynamic particle effects and simulations
+
+### **Development & Deployment**
+- **Docker**: Multi-stage builds for development and production
+- **Nginx**: High-performance web server with custom configuration
+- **ESLint**: Code quality and consistency
+- **Hot Module Replacement**: Instant development feedback
+
+## 🚀 Quick Start Guide
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Docker (optional, for containerized deployment)
+- **Node.js 20+** and npm (for optimal Three.js performance)
+- **Docker & Docker Compose** (recommended for deployment)
+- **Modern Browser** with WebGL support
 
-### Local Development
+### ⚡ Development Setup
 
 1. **Clone and install dependencies**:
    ```bash
    git clone <your-repo-url>
    cd portfolio-website
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 2. **Start development server**:
@@ -47,36 +89,96 @@ A stunning, responsive portfolio website built with React, TypeScript, Tailwind 
 
 3. **Open your browser** and navigate to `http://localhost:5173`
 
-### Build for Production
+### 🏗️ Production Build
 
 ```bash
+# Build optimized production bundle
 npm run build
+
+# Preview production build locally
 npm run preview
 ```
 
-## 🐳 Docker Deployment
+## 🐳 Docker Deployment Options
 
-### Using Docker Compose (Recommended)
-
-```bash
-# Production build
-docker-compose up -d
-
-# Development mode
-docker-compose --profile dev up
-```
-
-### Manual Docker Build
+### 🔥 **Method 1: Development with Hot Reload**
 
 ```bash
-# Build the image
-docker build -t portfolio-website .
+# Start development environment with file watching
+docker-compose up portfolio-dev
 
-# Run the container
-docker run -p 80:80 portfolio-website
+# Access at http://localhost:5173
 ```
 
-Your website will be available at `http://localhost`
+**Features:**
+- Hot module replacement
+- File watching with polling
+- Volume mounting for instant updates
+- Development-optimized container
+
+### 🚀 **Method 2: Production Deployment**
+
+```bash
+# Build and start production container
+docker-compose --profile production up -d
+
+# Access at http://localhost
+```
+
+**Features:**
+- Multi-stage optimized build
+- Nginx with custom configuration
+- Health checks and restart policies
+- Security hardened (non-root user)
+
+### 🌐 **Method 3: Full Production Stack**
+
+```bash
+# Deploy with reverse proxy and SSL
+docker-compose -f docker-compose.prod.yml up -d
+
+# Optional: Include Traefik reverse proxy
+docker-compose -f docker-compose.prod.yml --profile traefik up -d
+
+# Optional: Include PostgreSQL database
+docker-compose -f docker-compose.prod.yml --profile database up -d
+```
+
+**Features:**
+- Traefik reverse proxy with auto-SSL
+- PostgreSQL database for analytics
+- Production-grade networking
+- Automatic HTTPS certificates
+
+### 🛠️ **Development vs Production**
+
+| Environment | Command | Port | Features |
+|-------------|---------|------|----------|
+| **Development** | `docker-compose up portfolio-dev` | 5173 | Hot reload, source maps, dev tools |
+| **Production** | `docker-compose --profile production up` | 80 | Optimized build, Nginx, compression |
+| **Full Stack** | `docker-compose -f docker-compose.prod.yml up` | 80/443 | SSL, proxy, database |
+
+## 📋 Docker Commands Reference
+
+```bash
+# Development
+docker-compose up portfolio-dev                    # Start dev server
+docker-compose logs -f portfolio-dev               # View dev logs
+
+# Production  
+docker-compose --profile production up -d          # Start production
+docker-compose --profile production down           # Stop production
+docker-compose --profile production logs -f        # View production logs
+
+# Maintenance
+docker-compose down --volumes                       # Clean shutdown
+docker system prune -a                             # Clean unused containers
+docker-compose build --no-cache                    # Rebuild images
+
+# Health Checks
+docker-compose ps                                   # Check container status
+docker inspect portfolio-website-portfolio-1       # Detailed container info
+```
 
 ## 📝 Customization Guide
 

@@ -2,44 +2,64 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { techStack } from '../data/portfolio-data';
+import { useMousePosition } from '../hooks/useMousePosition';
+import TiltCard from './TiltCard';
 
 const TechCard = ({ tech, index }: { tech: any; index: number }) => {
+  const mousePosition = useMousePosition();
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8, rotateY: 90 }}
       whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ 
-        scale: 1.1, 
-        rotateY: 10,
-        transition: { duration: 0.3 }
-      }}
-      className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
-      style={{ transformStyle: 'preserve-3d' }}
+      className="relative group"
     >
-      <div className="text-center space-y-3">
-        <motion.div
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl mb-3"
-        >
-          {tech.icon}
-        </motion.div>
-        <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-          {tech.name}
-        </h4>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {tech.description}
-        </p>
-      </div>
-      
-      {/* Hover effect overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <TiltCard
+        intensity={15}
+        className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden"
+      >
+        {/* Dynamic background gradient */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${((mousePosition.normalizedX + 1) * 50)}% ${((mousePosition.normalizedY + 1) * 50)}%, #8B5CF6, #EC4899, transparent)`,
+          }}
+        />
+        
+        <div className="relative text-center space-y-4">
+          <motion.div
+            whileHover={{ scale: 1.2, rotate: 5 }}
+            transition={{ duration: 0.3 }}
+            className="flex justify-center mb-4"
+          >
+            <img
+              src={tech.icon}
+              alt={tech.name}
+              className="w-12 h-12 object-contain filter group-hover:drop-shadow-lg transition-all duration-300"
+              style={{
+                filter: 'brightness(1) contrast(1)',
+              }}
+            />
+          </motion.div>
+          
+          <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+            {tech.name}
+          </h4>
+          
+          <p className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
+            {tech.description}
+          </p>
+        </div>
+        
+        {/* Animated border */}
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm" />
+      </TiltCard>
     </motion.div>
   );
 };
 
-const TechSection = ({ title, technologies, icon }: { title: string; technologies: any[]; icon: string }) => {
+const TechSection = ({ title, technologies, sectionIcon }: { title: string; technologies: any[]; sectionIcon: string }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -49,7 +69,7 @@ const TechSection = ({ title, technologies, icon }: { title: string; technologie
     >
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-center gap-3">
-          <span className="text-3xl">{icon}</span>
+          <img src={sectionIcon} alt={title} className="w-8 h-8" />
           {title}
         </h3>
         <div className="w-16 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full" />
@@ -91,19 +111,19 @@ const TechStack = () => {
           <TechSection
             title="Frontend Development"
             technologies={techStack.frontend}
-            icon="🎨"
+            sectionIcon="https://cdn.simpleicons.org/react/61DAFB"
           />
           
           <TechSection
             title="Backend Development"
             technologies={techStack.backend}
-            icon="⚙️"
+            sectionIcon="https://cdn.simpleicons.org/nodedotjs/339933"
           />
           
           <TechSection
             title="Tools & DevOps"
             technologies={techStack.tools}
-            icon="🛠️"
+            sectionIcon="https://cdn.simpleicons.org/docker/2496ED"
           />
         </div>
 
